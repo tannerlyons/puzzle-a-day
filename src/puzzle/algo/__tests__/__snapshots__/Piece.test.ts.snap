@@ -1,0 +1,210 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Piece creates all combinations: brick 1`] = `
+"brick:
+-------------
+1. |XX|
+   |XX|
+   |XX|
+
+2. |XXX|
+   |XXX|"
+`;
+
+exports[`Piece creates all combinations: bucket 1`] = `
+"bucket:
+-------------
+1. |X X|
+   |XXX|
+
+2. |XX|
+   |X |
+   |XX|
+
+3. |XXX|
+   |X X|
+
+4. |XX|
+   | X|
+   |XX|"
+`;
+
+exports[`Piece creates all combinations: cactus 1`] = `
+"cactus:
+-------------
+1. |X |
+   |XX|
+   |X |
+   |X |
+
+2. |XXXX|
+   |  X |
+
+3. | X|
+   | X|
+   |XX|
+   | X|
+
+4. | X  |
+   |XXXX|
+
+5. | X|
+   |XX|
+   | X|
+   | X|
+
+6. |XXXX|
+   | X  |
+
+7. |X |
+   |X |
+   |XX|
+   |X |
+
+8. |  X |
+   |XXXX|"
+`;
+
+exports[`Piece creates all combinations: elle 1`] = `
+"elle:
+-------------
+1. |  X|
+   |  X|
+   |XXX|
+
+2. |X  |
+   |X  |
+   |XXX|
+
+3. |XXX|
+   |X  |
+   |X  |
+
+4. |XXX|
+   |  X|
+   |  X|"
+`;
+
+exports[`Piece creates all combinations: fork 1`] = `
+"fork:
+-------------
+1. |X |
+   |X |
+   |XX|
+   | X|
+
+2. | XXX|
+   |XX  |
+
+3. |X |
+   |XX|
+   | X|
+   | X|
+
+4. |  XX|
+   |XXX |
+
+5. | X|
+   | X|
+   |XX|
+   |X |
+
+6. |XXX |
+   |  XX|
+
+7. | X|
+   |XX|
+   |X |
+   |X |
+
+8. |XX  |
+   | XXX|"
+`;
+
+exports[`Piece creates all combinations: hoe 1`] = `
+"hoe:
+-------------
+1. |XX|
+   |X |
+   |X |
+   |X |
+
+2. |XXXX|
+   |   X|
+
+3. | X|
+   | X|
+   | X|
+   |XX|
+
+4. |X   |
+   |XXXX|
+
+5. |XX|
+   | X|
+   | X|
+   | X|
+
+6. |XXXX|
+   |X   |
+
+7. |X |
+   |X |
+   |X |
+   |XX|
+
+8. |   X|
+   |XXXX|"
+`;
+
+exports[`Piece creates all combinations: snek 1`] = `
+"snek:
+-------------
+1. |XX |
+   | X |
+   | XX|
+
+2. |  X|
+   |XXX|
+   |X  |
+
+3. | XX|
+   | X |
+   |XX |
+
+4. |X  |
+   |XXX|
+   |  X|"
+`;
+
+exports[`Piece creates all combinations: utah 1`] = `
+"utah:
+-------------
+1. |X |
+   |XX|
+   |XX|
+
+2. |XXX|
+   |XX |
+
+3. |XX|
+   |XX|
+   | X|
+
+4. | XX|
+   |XXX|
+
+5. | X|
+   |XX|
+   |XX|
+
+6. |XXX|
+   | XX|
+
+7. |XX|
+   |XX|
+   |X |
+
+8. |XX |
+   |XXX|"
+`;
