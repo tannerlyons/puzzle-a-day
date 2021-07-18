@@ -1,4 +1,4 @@
-type Permutation = boolean[][];
+export type Permutation = boolean[][];
 
 const parseLayout = (layout: string[]): Permutation[] => {
     function parse(layout: string[]): Permutation {
