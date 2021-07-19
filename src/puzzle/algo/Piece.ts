@@ -88,7 +88,7 @@ const parseLayout = (layout: string[]): Permutation[] => {
 };
 
 export class Piece {
-    private permutations: Permutation[];
+    public readonly permutations: Permutation[];
 
     constructor(public readonly name: string, layout: string[]) {
         this.permutations = parseLayout(layout);
