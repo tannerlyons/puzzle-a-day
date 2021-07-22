@@ -1,13 +1,18 @@
 import { months, days, Month, Day } from "./Date";
 import { Permutation, Piece } from "./Piece";
+import { padRight } from "./Util";
 
-type Coord = { row: number; col: number };
+export type Coord = { row: number; col: number };
 type PieceAndPermutation = {
     piece: Piece;
     permutation: Permutation;
 };
-type SourceBoard = Array<PieceAndPermutation | null>[];
+export type SourceBoard = Array<PieceAndPermutation | null>[];
 type HydtratedBoard = boolean[][];
+
+function coordsEq(coord1: Coord, coord2: Coord): boolean {
+    return coord1.col === coord2.col && coord1.row === coord2.row;
+}
 
 export function getLayout() {
     return [
@@ -21,6 +26,8 @@ export function getLayout() {
     ];
 }
 
+const NUM_COORDS = getLayout().flatMap(() => 1).length;
+
 const monthCache = new Map<string, Coord>();
 (getLayout().slice(0, 2) as Month[][]).forEach((row, rowIdx) => {
     row.forEach((monthName, colIdx) => {
@@ -31,7 +38,8 @@ const monthCache = new Map<string, Coord>();
 const dayCache = new Map<number, Coord>();
 (getLayout().slice(2) as Day[][]).forEach((row, rowIdx) => {
     row.forEach((dayName, colIdx) => {
-        dayCache.set(dayName, { col: colIdx, row: rowIdx });
+        // Add 2 to the rowIdx to account for the 1st 2 rows of months
+        dayCache.set(dayName, { col: colIdx, row: rowIdx + 2 });
     });
 });
 
@@ -82,11 +90,10 @@ export class Board {
     }
 
     public attempt(
-        placement: Placement,
+        { row, col }: Coord,
         piece: Piece,
         permutation: Permutation
     ): AttemptResult {
-        const { row, col } = getCoord(placement);
         if (!this.canPlace(row, col, permutation)) {
             return "collision";
         } else {
@@ -106,22 +113,26 @@ export class Board {
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
                 const piece = this.board[rowIdx][colIdx];
                 if (piece !== null) {
-                    const { permutation } = piece;
+                    const permutationLayout = piece.permutation.layout;
                     for (
                         let permRowIdx = 0;
-                        permRowIdx < permutation.length;
+                        permRowIdx < permutationLayout.length;
                         permRowIdx++
                     ) {
-                        const permRow = permutation[permRowIdx];
+                        const permRow = permutationLayout[permRowIdx];
 
                         for (
                             let permColIdx = 0;
                             permColIdx < permRow.length;
                             permColIdx++
                         ) {
-                            const curBoardRowIdx = rowIdx + permRowIdx;
-                            const curBoardColIdx = colIdx + permColIdx;
-                            hydrated[curBoardRowIdx][curBoardColIdx] = true;
+                            // Some permutations have empty spaces in them that would overlap the edges.
+                            // Ignore them.
+                            if (permRow[permColIdx]) {
+                                const curBoardRowIdx = rowIdx + permRowIdx;
+                                const curBoardColIdx = colIdx + permColIdx;
+                                hydrated[curBoardRowIdx][curBoardColIdx] = true;
+                            }
                         }
                     }
                 }
@@ -130,8 +141,7 @@ export class Board {
         return hydrated;
     }
 
-    public remove(placement: Placement): void {
-        const { row, col } = getCoord(placement);
+    public remove({ row, col }: Coord): void {
         if (this.board[row][col] === null) {
             console.error(`Row: ${row}, col: ${col}`);
             console.error(
@@ -164,23 +174,12 @@ export class Board {
             return false;
         }
 
-        // Otherwise we need to go looking through everything.
-        for (let rowIdx = 0; rowIdx < hydrated.length; rowIdx++) {
-            for (let colIdx = 0; colIdx < hydrated[rowIdx].length; colIdx++) {
-                const occupied = hydrated[rowIdx][colIdx];
-                if (!occupied) {
-                    // Allow the target month and day to be uncovered.
-                    const isTargetMonth =
-                        this.targetMonth.col === colIdx &&
-                        this.targetMonth.row === rowIdx;
-                    const isTargetDay =
-                        this.targetDay.col === colIdx &&
-                        this.targetDay.row === rowIdx;
-                    if (!isTargetMonth || !isTargetDay) {
-                        return false;
-                    }
-                }
-            }
+        // If there are more than 2 open coords on the board, it's unsolved.
+        const openCoords = hydrated
+            .flatMap((row) => row)
+            .filter((c) => !c).length;
+        if (openCoords > 2) {
+            return false;
         }
 
         return true;
@@ -198,6 +197,60 @@ export class Board {
         return clone;
     }
 
+    /**
+     * @returns the highest coord or null if the board is solved.
+     */
+    public getHighestOpenCoord(): Coord | null {
+        const hydrated = this.getHydrated();
+        for (let rowIdx = 0; rowIdx < hydrated.length; rowIdx++) {
+            for (let colIdx = 0; colIdx < hydrated[rowIdx].length; colIdx++) {
+                if (!hydrated[rowIdx][colIdx]) {
+                    const coord = { row: rowIdx, col: colIdx };
+                    if (
+                        !coordsEq(this.targetMonth, coord) &&
+                        !coordsEq(this.targetDay, coord)
+                    ) {
+                        return coord;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public __testSetBoard(board: SourceBoard): void {
+        (this.board as SourceBoard) = board;
+    }
+
+    public print(): string {
+        let tableCount = 1;
+        const table = this.board
+            .map(
+                (row) =>
+                    "|" +
+                    row.map((c) => (c === null ? "-" : tableCount++)).join("") +
+                    "|"
+            )
+            .join("\n");
+
+        const legend = (
+            this.board.flatMap((row) =>
+                row.filter((c) => c !== null)
+            ) as PieceAndPermutation[]
+        )
+            .map(
+                ({ piece, permutation }, i) =>
+                    `  ${i + 1}: ${padRight(piece.name, 7)} - rot: ${padRight(
+                        permutation.rotation + "",
+                        3
+                    )}, flip: ${permutation.flipped}`
+            )
+            .join("\n");
+
+        const line = new Array(this.board[0].length + 2).fill("-").join("");
+        return `${line}\n${table}\n${line}\n\n${legend}`;
+    }
+
     private canPlace(
         rowIdx: number,
         colIdx: number,
@@ -205,8 +258,12 @@ export class Board {
     ): boolean {
         const hydrated = this.getHydrated();
         // Ensure the piece fits and won't overlap others.
-        for (let permRowIdx = 0; permRowIdx < piece.length; permRowIdx++) {
-            const permRow = piece[permRowIdx];
+        for (
+            let permRowIdx = 0;
+            permRowIdx < piece.layout.length;
+            permRowIdx++
+        ) {
+            const permRow = piece.layout[permRowIdx];
 
             for (
                 let permColIdx = 0;

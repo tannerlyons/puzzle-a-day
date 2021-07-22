@@ -1,12 +1,11 @@
-import { Board, getLayout } from "./Board";
+import { Board, Coord, getLayout } from "./Board";
 import { Day, Month } from "./Date";
 import { allPieces, Permutation, Piece } from "./Piece";
-import { Queue } from "./Queue";
-import { Stack } from "./Stack";
+import { getPlacementCoords } from "./Util";
 
 function solverHelper(
     board: Board,
-    remainingPieces: Queue<Piece>,
+    remainingPieces: Piece[],
     solutions: Board[]
 ) {
     if (board.isSolved()) {
@@ -14,31 +13,42 @@ function solverHelper(
         return;
     }
     const layout = getLayout();
-    for (let rowIdx = 0; rowIdx < layout.length; rowIdx++) {
-        for (let colIdx = 0; colIdx < layout[rowIdx].length; colIdx++) {}
+    // Find highest open space that's not one of the target cells.
+    let highest = board.getHighestOpenCoord();
+
+    if (highest === null) {
+        throw new Error(
+            "Illegal case - highest coord not found when puzzle is not solved"
+        );
+    }
+
+    for (const currentPiece of remainingPieces) {
+        for (const permutation of currentPiece.permutations) {
+            for (const placementCoord of getPlacementCoords(
+                permutation,
+                highest
+            )) {
+                const result = board.attempt(
+                    placementCoord,
+                    currentPiece,
+                    permutation
+                );
+                if (result === "success") {
+                    // move on with the remaining pieces
+                    const restPieces = remainingPieces.filter(
+                        (p) => p !== currentPiece
+                    );
+                    solverHelper(board, restPieces, solutions);
+                    board.remove(placementCoord);
+                }
+            }
+        }
     }
 }
 
-export function solver(month: Month, day: Day) {
+export function solver(month: Month, day: Day): Board[] {
     const board = new Board(month, day);
-    const queue = new Queue<Piece>();
-    allPieces.forEach((piece) => queue.enqueue(piece));
-
-    /*
-    while the highest open cell in board exists
-        if (solved) 
-            push a solution onto the stack
-        else 
-            for each piece in queue  of remaining pieces
-                dequeue piece off queue
-                for each permutation of queue(piece.permutations)
-                    pop permutation
-                    for each coord in the permutation
-                        attempt to place permutation
-                        if legal:
-                            recurse starting at next available cell with a copy of all the remaining pieces
-                        else
-                            remove permutation
-                enqueue piece
-    */
+    const solutions: Board[] = [];
+    solverHelper(board, allPieces.slice(), solutions);
+    return solutions;
 }

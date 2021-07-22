@@ -3,28 +3,34 @@
 exports[`Piece creates all combinations: brick 1`] = `
 "brick:
 -------------
-1. |XX|
+1: rot:   0, flip: false
+   |XX|
    |XX|
    |XX|
 
-2. |XXX|
+2: rot:  90, flip: false
+   |XXX|
    |XXX|"
 `;
 
 exports[`Piece creates all combinations: bucket 1`] = `
 "bucket:
 -------------
-1. |X X|
+1: rot:   0, flip: false
+   |X X|
    |XXX|
 
-2. |XX|
+2: rot:  90, flip: false
+   |XX|
    |X |
    |XX|
 
-3. |XXX|
+3: rot: 180, flip: false
+   |XXX|
    |X X|
 
-4. |XX|
+4: rot: 270, flip: false
+   |XX|
    | X|
    |XX|"
 `;
@@ -32,55 +38,67 @@ exports[`Piece creates all combinations: bucket 1`] = `
 exports[`Piece creates all combinations: cactus 1`] = `
 "cactus:
 -------------
-1. |X |
+1: rot:   0, flip: false
+   |X |
    |XX|
    |X |
    |X |
 
-2. |XXXX|
+2: rot:  90, flip: false
+   |XXXX|
    |  X |
 
-3. | X|
+3: rot: 180, flip: false
+   | X|
    | X|
    |XX|
    | X|
 
-4. | X  |
+4: rot: 270, flip: false
+   | X  |
    |XXXX|
 
-5. | X|
+5: rot:   0, flip: true
+   | X|
    |XX|
    | X|
    | X|
 
-6. |XXXX|
-   | X  |
+6: rot:  90, flip: true
+   |  X |
+   |XXXX|
 
-7. |X |
+7: rot: 180, flip: true
+   |X |
    |X |
    |XX|
    |X |
 
-8. |  X |
-   |XXXX|"
+8: rot: 270, flip: true
+   |XXXX|
+   | X  |"
 `;
 
 exports[`Piece creates all combinations: elle 1`] = `
 "elle:
 -------------
-1. |  X|
+1: rot:   0, flip: false
+   |  X|
    |  X|
    |XXX|
 
-2. |X  |
+2: rot:  90, flip: false
+   |X  |
    |X  |
    |XXX|
 
-3. |XXX|
+3: rot: 180, flip: false
+   |XXX|
    |X  |
    |X  |
 
-4. |XXX|
+4: rot: 270, flip: false
+   |XXX|
    |  X|
    |  X|"
 `;
@@ -88,91 +106,111 @@ exports[`Piece creates all combinations: elle 1`] = `
 exports[`Piece creates all combinations: fork 1`] = `
 "fork:
 -------------
-1. |X |
+1: rot:   0, flip: false
+   |X |
    |X |
    |XX|
    | X|
 
-2. | XXX|
+2: rot:  90, flip: false
+   | XXX|
    |XX  |
 
-3. |X |
+3: rot: 180, flip: false
+   |X |
    |XX|
    | X|
    | X|
 
-4. |  XX|
+4: rot: 270, flip: false
+   |  XX|
    |XXX |
 
-5. | X|
+5: rot:   0, flip: true
+   | X|
    | X|
    |XX|
    |X |
 
-6. |XXX |
-   |  XX|
+6: rot:  90, flip: true
+   |XX  |
+   | XXX|
 
-7. | X|
+7: rot: 180, flip: true
+   | X|
    |XX|
    |X |
    |X |
 
-8. |XX  |
-   | XXX|"
+8: rot: 270, flip: true
+   |XXX |
+   |  XX|"
 `;
 
 exports[`Piece creates all combinations: hoe 1`] = `
 "hoe:
 -------------
-1. |XX|
+1: rot:   0, flip: false
+   |XX|
    |X |
    |X |
    |X |
 
-2. |XXXX|
+2: rot:  90, flip: false
+   |XXXX|
    |   X|
 
-3. | X|
+3: rot: 180, flip: false
+   | X|
    | X|
    | X|
    |XX|
 
-4. |X   |
+4: rot: 270, flip: false
+   |X   |
    |XXXX|
 
-5. |XX|
+5: rot:   0, flip: true
+   |XX|
    | X|
    | X|
    | X|
 
-6. |XXXX|
-   |X   |
+6: rot:  90, flip: true
+   |   X|
+   |XXXX|
 
-7. |X |
+7: rot: 180, flip: true
+   |X |
    |X |
    |X |
    |XX|
 
-8. |   X|
-   |XXXX|"
+8: rot: 270, flip: true
+   |XXXX|
+   |X   |"
 `;
 
 exports[`Piece creates all combinations: snek 1`] = `
 "snek:
 -------------
-1. |XX |
+1: rot:   0, flip: false
+   |XX |
    | X |
    | XX|
 
-2. |  X|
+2: rot:  90, flip: false
+   |  X|
    |XXX|
    |X  |
 
-3. | XX|
+3: rot:   0, flip: true
+   | XX|
    | X |
    |XX |
 
-4. |X  |
+4: rot:  90, flip: true
+   |X  |
    |XXX|
    |  X|"
 `;
@@ -180,31 +218,39 @@ exports[`Piece creates all combinations: snek 1`] = `
 exports[`Piece creates all combinations: utah 1`] = `
 "utah:
 -------------
-1. |X |
+1: rot:   0, flip: false
+   |X |
    |XX|
    |XX|
 
-2. |XXX|
+2: rot:  90, flip: false
+   |XXX|
    |XX |
 
-3. |XX|
+3: rot: 180, flip: false
+   |XX|
    |XX|
    | X|
 
-4. | XX|
+4: rot: 270, flip: false
+   | XX|
    |XXX|
 
-5. | X|
+5: rot:   0, flip: true
+   | X|
    |XX|
    |XX|
 
-6. |XXX|
-   | XX|
+6: rot:  90, flip: true
+   |XX |
+   |XXX|
 
-7. |XX|
+7: rot: 180, flip: true
+   |XX|
    |XX|
    |X |
 
-8. |XX |
-   |XXX|"
+8: rot: 270, flip: true
+   |XXX|
+   | XX|"
 `;

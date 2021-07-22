@@ -1,16 +1,29 @@
-export type Permutation = boolean[][];
+import { padLeft, padRight } from "./Util";
+
+export type Rotation = 0 | 90 | 180 | 270;
+export type Permutation = {
+    rotation: Rotation;
+    layout: boolean[][];
+    flipped: boolean;
+};
 
 const parseLayout = (layout: string[]): Permutation[] => {
     function parse(layout: string[]): Permutation {
-        return layout.map((line) => line.split("").map((char) => char === "X"));
+        return {
+            flipped: false,
+            layout: layout.map((line) =>
+                line.split("").map((char) => char === "X")
+            ),
+            rotation: 0,
+        };
     }
 
     function rotate(
         parsedLayout: Permutation,
         rotateCount: 1 | 2 | 3
     ): Permutation {
-        let prev = parsedLayout;
-        let rotated = parsedLayout;
+        let prev: Permutation["layout"] = parsedLayout.layout;
+        let rotated: Permutation["layout"] = parsedLayout.layout;
 
         for (let numRotations = 0; numRotations < rotateCount; numRotations++) {
             const oldDimensions = {
@@ -36,7 +49,11 @@ const parseLayout = (layout: string[]): Permutation[] => {
 
             prev = rotated;
         }
-        return rotated;
+        return {
+            ...parsedLayout,
+            layout: rotated,
+            rotation: (90 * rotateCount) as Rotation,
+        };
     }
 
     function validate(layout: string[]): void {
@@ -51,7 +68,7 @@ const parseLayout = (layout: string[]): Permutation[] => {
 
     function removeDuplicates(perms: Permutation[]): Permutation[] {
         function hash(perm: Permutation) {
-            return perm
+            return perm.layout
                 .map((line) => line.map((c) => (c ? "X" : " ")).join(","))
                 .join("n");
         }
@@ -67,8 +84,12 @@ const parseLayout = (layout: string[]): Permutation[] => {
         return ret;
     }
 
-    function flip(permutation: Permutation) {
-        return permutation.map((line) => line.slice().reverse());
+    function flip(permutation: Permutation): Permutation {
+        return {
+            ...permutation,
+            flipped: !permutation.flipped,
+            layout: permutation.layout.map((line) => line.slice().reverse()),
+        };
     }
 
     validate(layout);
@@ -79,9 +100,9 @@ const parseLayout = (layout: string[]): Permutation[] => {
         rotate(parsed, 2),
         rotate(parsed, 3),
         flip(parsed),
-        flip(rotate(parsed, 1)),
-        flip(rotate(parsed, 2)),
-        flip(rotate(parsed, 3)),
+        rotate(flip(parsed), 1),
+        rotate(flip(parsed), 2),
+        rotate(flip(parsed), 3),
     ];
 
     return removeDuplicates(permutations);
@@ -102,11 +123,14 @@ export class Piece {
             this.permutations
                 .map(
                     (perm, idx) =>
-                        `${1 + idx}. ` +
-                        perm
+                        `${1 + idx}: rot: ${padLeft(
+                            "" + perm.rotation,
+                            3
+                        )}, flip: ${perm.flipped}\n` +
+                        perm.layout
                             .map(
-                                (line, lineIdx) =>
-                                    `${lineIdx === 0 ? "" : "   "}|` +
+                                (line) =>
+                                    `   |` +
                                     line
                                         .map((ch) => (ch ? "X" : " "))
                                         .join("") +
