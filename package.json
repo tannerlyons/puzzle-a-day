@@ -16,11 +16,5 @@
     "scripts": {
         "test": "jest",
         "test:debug": "jest --inspect-brk test --runInBand --no-cache"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
     }
 }
