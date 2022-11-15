@@ -15,7 +15,7 @@
     },
     "scripts": {
         "test": "jest",
-        "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache"
+        "test:debug": "jest --inspect-brk test --runInBand --no-cache"
     },
     "eslintConfig": {
         "extends": [
