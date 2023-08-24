@@ -32,6 +32,14 @@
             "internalConsoleOptions": "neverOpen",
             "env": { "CI": "true" },
             "disableOptimisticBPs": true
+        },
+        {
+            "name": "Run CLI",
+            "request": "launch",
+            "runtimeArgs": ["run", "cli", "generate", "Jan", "30"],
+            "runtimeExecutable": "yarn",
+            "skipFiles": ["<node_internals>/**"],
+            "type": "node"
         }
     ]
 }

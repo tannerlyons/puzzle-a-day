@@ -1,6 +1,15 @@
 import { months, days, Month, Day } from "./Date";
-import { Permutation, Piece } from "./Piece";
-import { padRight } from "./Util";
+import { Permutation, Piece, PieceName } from "./Piece";
+import { padLeft, padRight } from "./Util";
+
+interface Placement {
+    rotation: 0 | 90 | 180 | 270;
+    flipped: boolean;
+    x: number;
+    y: number;
+}
+
+export type PlacementMap = Record<PieceName, Placement>;
 
 export type Coord = { row: number; col: number };
 type PieceAndPermutation = {
@@ -26,8 +35,6 @@ export function getLayout() {
     ];
 }
 
-const NUM_COORDS = getLayout().flatMap(() => 1).length;
-
 const monthCache = new Map<string, Coord>();
 (getLayout().slice(0, 2) as Month[][]).forEach((row, rowIdx) => {
     row.forEach((monthName, colIdx) => {
@@ -44,22 +51,6 @@ const dayCache = new Map<number, Coord>();
 });
 
 const getEmptyBoard = () => getLayout().map((row) => row.map(() => false));
-
-type Placement = Month | Day;
-
-const getCoord = (placement: Placement): Coord => {
-    let coord = null;
-    if (typeof placement === "string") {
-        coord = monthCache.get(placement) || null;
-    } else {
-        coord = dayCache.get(placement) || null;
-    }
-
-    if (coord === null) {
-        throw new Error(`Illegal placement request: "${placement}"`);
-    }
-    return coord;
-};
 
 export type AttemptResult =
     // Placement succeeded, Board mutated.
@@ -243,12 +234,38 @@ export class Board {
                     `  ${i + 1}: ${padRight(piece.name, 7)} - rot: ${padRight(
                         permutation.rotation + "",
                         3
-                    )}, flip: ${permutation.flipped}`
+                    )}, flip: ${permutation.flipped}\n${permutation.layout
+                        .map((row) =>
+                            padLeft(
+                                row.map((b) => (b ? "X" : " ")).join(""),
+                                13
+                            )
+                        )
+                        .join("\n")}`
             )
             .join("\n");
 
         const line = new Array(this.board[0].length + 2).fill("-").join("");
         return `${line}\n${table}\n${line}\n\n${legend}`;
+    }
+
+    public getPlacements(): PlacementMap {
+        const placements = {} as PlacementMap;
+
+        this.board.forEach((row, rowIdx) =>
+            row.forEach((val, colIdx) => {
+                if (val) {
+                    placements[val.piece.name] = {
+                        rotation: val.permutation.rotation,
+                        flipped: val.permutation.flipped,
+                        x: colIdx,
+                        y: rowIdx,
+                    };
+                }
+            })
+        );
+
+        return placements;
     }
 
     private canPlace(

@@ -1,3 +1,4 @@
+import { shuffle } from "lodash";
 import { Board, Coord, getLayout } from "./Board";
 import { Day, Month } from "./Date";
 import { allPieces, Permutation, Piece } from "./Piece";
@@ -6,7 +7,8 @@ import { getPlacementCoords } from "./Util";
 function solverHelper(
     board: Board,
     remainingPieces: Piece[],
-    solutions: Board[]
+    solutions: Board[],
+    maxSolutions: number
 ) {
     if (board.isSolved()) {
         solutions.push(board.clone());
@@ -38,17 +40,24 @@ function solverHelper(
                     const restPieces = remainingPieces.filter(
                         (p) => p !== currentPiece
                     );
-                    solverHelper(board, restPieces, solutions);
+                    solverHelper(board, restPieces, solutions, maxSolutions);
                     board.remove(placementCoord);
+                    if (solutions.length >= maxSolutions) {
+                        return;
+                    }
                 }
             }
         }
     }
 }
 
-export function solver(month: Month, day: Day): Board[] {
+export function solver(
+    month: Month,
+    day: Day,
+    maxSolutions = Number.MAX_SAFE_INTEGER
+): Board[] {
     const board = new Board(month, day);
     const solutions: Board[] = [];
-    solverHelper(board, allPieces.slice(), solutions);
+    solverHelper(board, shuffle(allPieces.slice()), solutions, maxSolutions);
     return solutions;
 }

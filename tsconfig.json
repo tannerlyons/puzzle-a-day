@@ -17,5 +17,12 @@
         "jsx": "react-jsx",
         "downlevelIteration": true
     },
-    "include": ["src"]
+    "include": ["src"],
+    "ts-node": {
+        // These options are overrides used only by ts-node
+        "compilerOptions": {
+            // Required in order to run TS script files outside of packages
+            "module": "commonjs"
+        }
+    }
 }

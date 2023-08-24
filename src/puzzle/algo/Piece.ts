@@ -1,5 +1,15 @@
 import { padLeft, padRight } from "./Util";
 
+export type PieceName =
+    | "bucket"
+    | "brick"
+    | "snek"
+    | "fork"
+    | "elle"
+    | "cactus"
+    | "utah"
+    | "hoe";
+
 export type Rotation = 0 | 90 | 180 | 270;
 export type Permutation = {
     rotation: Rotation;
@@ -111,7 +121,7 @@ const parseLayout = (layout: string[]): Permutation[] => {
 export class Piece {
     public readonly permutations: Permutation[];
 
-    constructor(public readonly name: string, layout: string[]) {
+    constructor(public readonly name: PieceName, layout: string[]) {
         this.permutations = parseLayout(layout);
     }
 
@@ -146,64 +156,62 @@ export class Piece {
 export const allPieces = [
     /**
      * bucket
-     *
-     * X X
-     * XXX
+     * 
+     * XX
+     *  X
+     * XX
      *
      */
-    new Piece("bucket", ["X X", "XXX"]),
+    new Piece("bucket", ["XX", " X", "XX"]),
 
     /**
      * brick
      *
-     * XX
-     * XX
-     * XX
+     * XXX
+     * XXX
      *
      */
-    new Piece("brick", ["XX", "XX", "XX"]),
+    new Piece("brick", ["XXX", "XXX"]),
 
     /**
      * snek
      *
-     * XX
-     *  X
      *  XX
+     *  X
+     * XX
      *
      */
-    new Piece("snek", ["XX ", " X ", " XX"]),
+    new Piece("snek", [" XX", " X ", "XX "]),
 
     /**
      * fork
      *
-     * X
-     * X
+     *  XXX 
      * XX
-     *  X
      *
      */
-    new Piece("fork", ["X ", "X ", "XX", " X"]),
+    new Piece("fork", [" XXX", "XX  "]),
 
     /**
      * elle
      *
-     *   X
-     *   X
      * XXX
+     * X
+     * X
      *
      */
-    new Piece("elle", ["  X", "  X", "XXX"]),
+    new Piece("elle", ["XXX", "X  ", "X  "]),
 
     /**
      * cactus
      *
      * X
-     * XX
      * X
+     * XX
      * X
      *
      */
-    new Piece("cactus", ["X ", "XX", "X ", "X "]),
+    new Piece("cactus", ["X ", "X ", "XX", "X "]),
 
     /**
      * utah
@@ -219,10 +227,10 @@ export const allPieces = [
      * hoe
      *
      * XX
-     * X
-     * X
-     * X
+     *  X
+     *  X
+     *  X
      *
      */
-    new Piece("hoe", ["XX", "X ", "X ", "X "]),
+    new Piece("hoe" as const, ["XX", " X", " X", " X"]),
 ];
