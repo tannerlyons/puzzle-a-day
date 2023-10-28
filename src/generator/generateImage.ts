@@ -281,7 +281,7 @@ async function getDirectionalTileShadows(
         };
 
         const right = {
-            x,
+            x: x + 1,
             y,
             width: 1,
             height: 0.1,
@@ -303,9 +303,12 @@ async function getDirectionalTileShadows(
             height: 0.1,
             alpha: 0.2,
         };
-        // shadows.push(
-        //     await createBox()
-        // );
+        shadows.push(
+            // await createBox(left),
+            // await createBox(right),
+            await createBox(top),
+            // await createBox(bottom),
+        );
     }
 
     return shadows;
